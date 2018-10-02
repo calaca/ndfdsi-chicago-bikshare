@@ -30,7 +30,7 @@ input("Aperte Enter para continuar...")
 # DONE: Imprima as primeiras 20 linhas usando um loop para identificar os dados.
 print("\n\nTAREFA 1: Imprimindo as primeiras 20 amostras")
 for index in range(21):
-    print(str(index) + ": " + str(data_list[index]))
+    print(f"{index}: {data_list[index]}")
 
 # Vamos mudar o data_list para remover o cabeçalho dele.
 data_list = data_list[1:]
@@ -43,12 +43,11 @@ input("Aperte Enter para continuar...")
 # DONE: Imprima o `gênero` das primeiras 20 linhas
 
 print("\nTAREFA 2: Imprimindo o gênero das primeiras 20 amostras")
-for index in range(20):
-    gender = data_list[index][-2]
-    if gender == '':
-        print(str(index) + ": " + "No gender specified")
-    else:
-        print(str(index) + ": " + str(gender))
+for index, line in enumerate(data_list[:20], start=1):
+    gender = line[-2]
+    if not gender: # string vazia retorna false e todas as outras retornam true
+        gender = 'No gender specified' # mudandno a variável gender eu só  preciso de um print
+    print(f"Line: {index} Gender: {gender}")
 
 # Ótimo! Nós podemos pegar as linhas(samples) iterando com um for, e as colunas(features) por índices.
 # Mas ainda é difícil pegar uma coluna em uma lista. Exemplo: Lista com todos os gêneros
@@ -58,15 +57,15 @@ input("Aperte Enter para continuar...")
 # DONE: Crie uma função para adicionar as colunas(features) de uma lista em outra lista, na mesma ordem
 
 
-"""
-Transforma colunas de uma lista de dados em lista.
-Argumentos:
-    data: Lista de dados com colunas.
-    index: Índice da coluna.
-Retorna:
-    Uma lista de valores da coluna especificada.
-"""
 def column_to_list(data, index):
+    """
+    Transforma colunas de uma lista de dados em lista.
+    Argumentos:
+        data: Lista de dados com colunas.
+        index: Índice da coluna.
+    Retorna:
+        Uma lista de valores da coluna especificada.
+    """
     column_list = []
     # Dica: Você pode usar um for para iterar sobre as amostras, pegar a feature pelo seu índice, e dar append para uma lista
     for line in data:
@@ -92,8 +91,14 @@ input("Aperte Enter para continuar...")
 # TAREFA 4
 # DONE: Conte cada gênero. Você não deveria usar uma função para isso.
 gender_list = column_to_list(data_list, -2)
-male = gender_list.count('Male')
-female = gender_list.count('Female')
+male = 0
+female = 0
+
+for gender in gender_list:
+    if gender == "Male":
+        male += 1
+    if gender == "Female":
+        female += 1
 
 # Verificando o resultado
 print("\nTAREFA 4: Imprimindo quantos masculinos e femininos nós encontramos")
@@ -109,19 +114,22 @@ input("Aperte Enter para continuar...")
 # DONE: Crie uma função para contar os gêneros. Retorne uma lista.
 # Isso deveria retornar uma lista com [count_male, count_female] (exemplo: [10, 15] significa 10 Masculinos, 15 Femininos)
 
-"""
-Conta quantos gêneros existem numa lista.
-Argumentos:
-    data_list: Lista de dados com colunas.
-Retorna:
-    Uma lista de dois valores.
-"""
 def count_gender(data_list):
+    """
+    Conta quantos gêneros existem numa lista.
+    Argumentos:
+        data_list: Lista de dados com colunas.
+    Retorna:
+        Uma lista de dois valores.
+    """
     male = 0
     female = 0
     gender_list = column_to_list(data_list, -2)
-    male = gender_list.count('Male')
-    female = gender_list.count('Female')
+    for gender in gender_list:
+        if gender == "Male":
+            male += 1
+        if gender == "Female":
+            female += 1
     return [male, female]
 
 
@@ -143,19 +151,19 @@ input("Aperte Enter para continuar...")
 # DONE: Crie uma função que pegue o gênero mais popular, e retorne este gênero como uma string.
 # Esperamos ver "Male", "Female", ou "Equal" como resposta.
 
-"""
-Encontra qual é o gênero mais popular numa lista.
-Argumentos:
-    data_list: Lista de dados com colunas.
-Retorna:
-    Uma string do gênero mais popular.
-"""
 def most_popular_gender(data_list):
+    """
+    Encontra qual é o gênero mais popular numa lista.
+    Argumentos:
+        data_list: Lista de dados com colunas.
+    Retorna:
+        Uma string do gênero mais popular.
+    """
     answer = ""
-    gender_count = count_gender(data_list) # [male, female]
-    if gender_count[0] > gender_count[1]:
+    male, female = count_gender(data_list) # [male, female]
+    if male > female:
         answer = "Male"
-    elif gender_count[0] < gender_count[1]:
+    elif male < female:
         answer = "Female"
     else:
         answer = "Equal"
@@ -189,19 +197,22 @@ input("Aperte Enter para continuar...")
 # DONE: Crie um gráfico similar para user_types. Tenha certeza que a legenda está correta.
 print("\nTAREFA 7: Verifique o gráfico!")
 
-"""
-Conta os tipos de usuários.
-Argumentos:
-    data_list: Lista de dados com colunas.
-Retorna:
-    Uma lista de itens da coluna especificada.
-"""
 def count_user_types(data_list):
+    """
+    Conta os tipos de usuários.
+    Argumentos:
+        data_list: Lista de dados com colunas.
+    Retorna:
+        Uma lista de itens da coluna especificada.
+    """
     customer = 0
     subscriber = 0
     user_types_list = column_to_list(data_list, -3)
-    customer = user_types_list.count("Customer")
-    subscriber = user_types_list.count("Subscriber")
+    for user_type in user_types_list:
+        if user_type == "Customer":
+            customer += 1
+        if user_type == "Subscriber":
+            subscriber += 1
     return [customer, subscriber]
 
 user_types_list = column_to_list(data_list, -3)
@@ -267,7 +278,12 @@ mean_trip = round(total_trip/len_trip)
 center_trip = len_trip//2
 
 # Mediana
-median_trip = round(trip_duration_list[center_trip])
+if len_trip % 2:
+    # Tamanho da lista ímpar: número do meio na lista ordenada
+    median_trip = round(trip_duration_list[center_trip])
+else:
+    # Tamanho da lista par: média dos dois valores do meio
+    median_trip = round((trip_duration_list[center_trip] + trip_duration_list[center_trip + 1])/2.0)
 
 print("\nTAREFA 9: Imprimindo o mínimo, máximo, média, e mediana")
 print("Min: ", min_trip, "Max: ", max_trip,
@@ -305,7 +321,6 @@ Argumentos:
     param2: O segundo parâmetro.
 Retorna:
     Uma lista de valores x.
-
 """
 
 input("Aperte Enter para continuar...")
@@ -315,14 +330,14 @@ input("Aperte Enter para continuar...")
 print("Você vai encarar o desafio? (yes ou no)")
 answer = "yes"
 
-"""
-Conta os itens de uma coluna.
-Argumentos:
-    column_list: Lista de colunas.
-Retorna:
-    Uma lista de tipos únicos e uma lista da soma de ocorrências desses tipos.
-"""
 def count_items(column_list):
+    """
+    Conta os itens de uma coluna.
+    Argumentos:
+        column_list: Lista de colunas.
+    Retorna:
+        Uma lista de tipos únicos e uma lista da soma de ocorrências desses tipos.
+    """
     item_types = []
     count_items = []
 
@@ -354,14 +369,14 @@ print("\nTAREFA 13 - EXTRA: Verifique o gráfico!")
 birth_year_list = column_to_list(data_list, -1)
 ages_list = []
 
-"""
-Calcula idade dado o ano de nascimento.
-Argumentos:
-    birth_year: Ano de nascimento.
-Retorna:
-    Um número inteiro correspondente a idade.
-"""
 def calculate_age(birth_year):
+    """
+    Calcula idade dado o ano de nascimento.
+    Argumentos:
+        birth_year: Ano de nascimento.
+    Retorna:
+        Um número inteiro correspondente a idade.
+    """
     today = date.today()
     birth_year = int(float(birth_year))
     return today.year - birth_year
