@@ -3,6 +3,7 @@
 # Começando com os imports
 import csv
 import matplotlib.pyplot as plt
+from datetime import date
 
 # Vamos ler os dados como uma lista
 print("Lendo o documento...")
@@ -309,7 +310,7 @@ Retorna:
 
 input("Aperte Enter para continuar...")
 # TAREFA 12 - Desafio! (Opcional)
-# TODO: Crie uma função para contar tipos de usuários, sem definir os tipos
+# DONE: Crie uma função para contar tipos de usuários, sem definir os tipos
 # para que nós possamos usar essa função com outra categoria de dados.
 print("Você vai encarar o desafio? (yes ou no)")
 answer = "yes"
@@ -344,3 +345,37 @@ if answer == "yes":
     assert len(types) == 3, "TAREFA 12: Há 3 tipos de gênero!"
     assert sum(counts) == 1551505, "TAREFA 12: Resultado de retorno incorreto!"
     # -----------------------------------------------------
+
+
+input("Aperte Enter para continuar...")
+# TAREFA 13 - Extra!
+print("\nTAREFA 13 - EXTRA: Verifique o gráfico!")
+
+birth_year_list = column_to_list(data_list, -1)
+ages_list = []
+
+"""
+Calcula idade dado o ano de nascimento.
+Argumentos:
+    birth_year: Ano de nascimento.
+Retorna:
+    Um número inteiro correspondente a idade.
+"""
+def calculate_age(birth_year):
+    today = date.today()
+    birth_year = int(float(birth_year))
+    return today.year - birth_year
+
+# Lista de idades dos usuários
+for year in birth_year_list:
+    if year != '':
+        ages_list.append(calculate_age(year))
+
+# Scatter Plot de idades
+types, counts = count_items(ages_list)
+y_pos = list(range(len(types)))
+plt.scatter(y_pos, counts)
+plt.ylabel("Quantidade")
+plt.xlabel("Idade")
+plt.title("Quantidade por idade dos usuários")
+plt.show(block=True)
