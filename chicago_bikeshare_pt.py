@@ -128,10 +128,15 @@ def count_gender(data_list):
     for gender in gender_list:
         if gender == "Male":
             male += 1
-        if gender == "Female":
+        elif gender == "Female":
             female += 1
     return [male, female]
 
+# Calcular a quantidade de pessoas que não especificaram gênero
+no_gender = 0
+for gender in gender_list:
+    if not gender:
+        no_gender += 1
 
 print("\nTAREFA 5: Imprimindo o resultado de count_gender")
 print(count_gender(data_list))
@@ -232,7 +237,7 @@ input("Aperte Enter para continuar...")
 male, female = count_gender(data_list)
 print("\nTAREFA 8: Por que a condição a seguir é Falsa?")
 print("male + female == len(data_list):", male + female == len(data_list))
-answer = "{} usuários não informaram gênero.".format(str(column_to_list(data_list, -2).count('')))
+answer = "{} usuários não informaram gênero.".format(str(no_gender))
 print("resposta:", answer)
 
 # ------------ NÃO MUDE NENHUM CÓDIGO AQUI ------------
